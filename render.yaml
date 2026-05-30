@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: nse-bot-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m uvicorn --app-dir src nse_bot.api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: UPSTOX_API_KEY
+        sync: false
+      - key: UPSTOX_API_SECRET
+        sync: false
+      - key: UPSTOX_REDIRECT_URI
+        sync: false
+      - key: TOKEN_ENCRYPTION_KEY
+        generateValue: true
+      - key: PAPER_TRADING
+        value: "true"
+      - key: AUTO_PIPELINE_ENABLED
+        value: "true"
+      - key: AUTO_PIPELINE_INTERVAL_MINUTES
+        value: "15"
+      - key: AUTO_EXECUTE_PAPER_TRADES
+        value: "false"
+      - key: WEBSOCKET_DEFAULT_MODE
+        value: "ltpc"
+
+  - type: web
+    name: nse-bot-dashboard
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m streamlit run dashboard/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: API_HOSTPORT
+        fromService:
+          type: web
+          name: nse-bot-api
+          property: hostport
