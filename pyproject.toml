@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nse-multi-agent-bot"
+version = "1.0.0"
+description = "NSE trading bot with multi-agent architecture and Upstox integration"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "streamlit>=1.45.0",
+  "pandas>=2.2.0",
+  "numpy>=2.1.0",
+  "requests>=2.32.0",
+  "python-dotenv>=1.0.1",
+  "pydantic>=2.10.0",
+  "pydantic-settings>=2.5.2",
+  "sqlalchemy>=2.0.35",
+  "python-multipart>=0.0.12",
+  "cryptography>=43.0.0",
+  "upstox-python-sdk>=2.21.0"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+nse-bot-cli = "nse_bot.cli:main"
